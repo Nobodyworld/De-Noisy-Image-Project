@@ -1,7 +1,7 @@
 # De-Noisy-Image-Project
 This repository contains scripts and directories for a public domain image editing neural network, 'De-Noisy Image Project', using a U-Net architecture.
 
-This repository contains scripts and directories for an image the 'De-Noisy Image Project' using a U-Net architecture. The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles below from near lines 190-200 of `model.py`.
+The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles below from near lines 190-200 of `model.py`.
 
   """
     # Set batch size, image dimensions
