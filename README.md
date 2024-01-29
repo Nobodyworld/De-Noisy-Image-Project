@@ -123,18 +123,18 @@ Your code provides a comprehensive setup for training a U-Net model for image de
 Remember to test your code with a subset of your data first to ensure everything is functioning as expected. Also, keep track of your system's resources (like memory and disk space) when running the training, especially with large datasets or for a large number of epochs.
 
 
-##Example Script Outputs:
-/test_these.py
+## Example Script Outputs
+### /test_these.py
 PLEASE REFER to the test_these folder for inference.
 
-/ztest_gpu.py
+### /ztest_gpu.py
 GPU: NVIDIA GeForce RTX 3060
 tensor([5., 7., 9.], device='cuda:0')
 
-/zcount_parameter.py
+### /zcount_parameter.py
 Number of trainable parameters: 5158995
 
-/model.py"
+### /model.py"
 No pre-trained model found. Training from scratch.
 Epoch [1/32], Loss: 0.4423, PSNR: 9.2922
 Validation Loss: 0.4056, PSNR: 9.9336
