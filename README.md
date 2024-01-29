@@ -93,7 +93,7 @@ This architecture is a standard U-Net model used for tasks like image segmentati
 
 ---
 
-##ChatGPT Said...
+## ChatGPT Said...
 Your code provides a comprehensive setup for training a U-Net model for image denoising. It includes data loading, model definition, training, validation, testing, and plotting of training/validation loss. The overall structure seems sound. Here are a few observations and potential improvements:
 
 1. **Data Directories**: You've set the data directories (`train_dir`, `test_dir`, `val_dir`) as relative paths. Ensure that the `train`, `test`, and `val` directories with the subdirectories `noisy` and `clean` are present in the same directory where the script is executed.
