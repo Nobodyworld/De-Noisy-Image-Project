@@ -123,6 +123,16 @@ Your code provides a comprehensive setup for training a U-Net model for image de
 Remember to test your code with a subset of your data first to ensure everything is functioning as expected. Also, keep track of your system's resources (like memory and disk space) when running the training, especially with large datasets or for a large number of epochs.
 
 
+## Enable your Nvidia GPU
+Follow the instructions from these various links to install CUDA, cuDNN, and determine the versions witht he support matrix.
+
+CUDA Quick Start Guide - https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#local-installer
+Install CUDA - https://docs.nvidia.com/cuda/archive/11.6.0/cuda-installation-guide-microsoft-windows/index.html
+Install cuDNN - https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows
+GPU Suppoort Matrix - https://docs.nvidia.com/deeplearning/cudnn/support-matrix/index.html#cudnn-cuda-hardware-versions
+
+This can be disheatening at times but follow the instructions carefully and you will be just fine. Run the `ztest_gpu.py` script to determine if you have your GPU enabled. An example of an enabled GPU console output can be viewed in the section below.
+
 ## Example Script Outputs
 ### /test_these.py
 PLEASE REFER to the test_these folder for inference.
