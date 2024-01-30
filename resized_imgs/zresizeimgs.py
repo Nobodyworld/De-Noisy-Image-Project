@@ -6,7 +6,7 @@ img_height = 1920
 img_width = 1280
 
 # Define data directory
-input_dir = '.\resized_imgs'
+input_dir = './resized_imgs'
 
 # Check if directory exists
 if not os.path.exists(input_dir):

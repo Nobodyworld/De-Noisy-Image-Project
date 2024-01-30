@@ -1,7 +1,7 @@
 import os
 
 # Define data directory
-input_dir = '.\resized_imgs'
+input_dir = './resized_imgs'
 
 # Initialize counter for new filenames
 counter = 1
