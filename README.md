@@ -1,8 +1,9 @@
 # De-Noisy-Image-Project
-This repository contains scripts and directories for a public domain image editing neural network, 'De-Noisy Image Project', using a U-Net architecture.
 
-The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles below from near lines 190-200 of `model.py`.
+This repository contains scripts and directories for the "De-Noisy Image Project" using a U-Net architecture. (See "Small" and "Xtra-Small" repos for less needed compute.) The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles mentioned further below. (See lines 190-200 of `model.py`)
 
+https://github.com/Nobodyworld/De-Noisy-Image-Project-Small
+ 
   """
     # Set batch size, image dimensions
     batch_size = 2
@@ -11,9 +12,19 @@ The main components are the `resized_imgs` folder for storing and preprocessing 
     epochs = 32
   """
 
-Note: As you can see above I am pushing my limits with the current architecture by using such large images. Using a batch size of two does ultimately get me where I need to be when holding that many numbers in my GPU at a single time. (1920x1280 x {i} = 2,457,600) Upon using the script, `/zcount_parameter.py` I can find that the the total avaliable parameters i have for this trained model is, "Number of trainable parameters: 5,158,995." Which as a whole number has to be 2. 
+Note: As you can see above we have reduced the image height and width significantly from the large repo for this project to account for less GPU or CPU compute power. Do not forget to run the `ztest_gpu.py` file to verify you have a connected cuda device.
 
 Batching Note: Having a batch size of two does not mean that my model only sees two images per 'epoch' but rather that my model is fed two images at a time, of all images in the dataset, until it finishes, which completes one epoch. So if I have 20 images I will then have 10 batches per epoch.
+
+For image dimensions of 640 in width and 960 in height, you can apply a maximum of 7 pooling layers. This number is calculated based on how many times each dimension can be divided by 2 (halved) until it reaches a minimum size while remaining a whole number. However, in practice, you may not need or want to use the maximum number of pooling layers, as each pooling layer reduces the spatial resolution of your feature maps. The actual number to use would depend on the specifics of your task and the architecture of your neural network.
+
+"ceil_mode plici(bool) – when True, will use ceil instead of floor to compute the output shape." https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html#torch.nn.MaxPool2d
+
+![image](https://github.com/Nobodyworld/De-Noisy-Image-Project-Small/assets/127373451/ae4f539f-41d8-4ecf-9d2a-f82dfb5b0682)
+
+Tensor mismatch
+torch.Size([6, 112, 14, 10])
+torch.Size([6, 112, 15, 10])
 
 ## Directory Structure
 
@@ -91,7 +102,6 @@ This function defines the forward pass of the network. It sequentially applies a
 This architecture is a standard U-Net model used for tasks like image segmentation and denoising. The use of residual connections and skip connections typically helps in training deeper models more effectively.
 
 
----
 
 ## ChatGPT Said...
 Your code provides a comprehensive setup for training a U-Net model for image denoising. It includes data loading, model definition, training, validation, testing, and plotting of training/validation loss. The overall structure seems sound. Here are a few observations and potential improvements:
