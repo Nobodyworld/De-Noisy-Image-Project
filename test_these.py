@@ -10,7 +10,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the trained model
 model = UNet()
-model.load_state_dict(torch.load("best_psnr_denocoder_pytorch.pth"))
+# Ensure the model is loaded to CPU if CUDA is not available
+model.load_state_dict(torch.load("best_psnr_denocoder_pytorch.pth", map_location=device))
 model = model.to(device)
 model.eval()
 
