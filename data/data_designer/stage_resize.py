@@ -1,9 +1,19 @@
 import os
 from PIL import Image
+import json
 
-# Set image dimensions
-img_height = 1920
-img_width = 1280
+def load_config(config_path='config/config.json'):
+    try:
+        with open(config_path, 'r') as config_file:
+            config = json.load(config_file)
+            return config
+    except FileNotFoundError:
+        raise Exception("config.json file not found.")
+    except json.JSONDecodeError:
+        raise Exception("Failed to decode config.json.")
+
+img_height = load_config()['training']['img_height']
+img_width = load_config()['training']['img_width']
 
 # Get the current script directory
 script_dir = os.path.dirname(os.path.realpath(__file__))
