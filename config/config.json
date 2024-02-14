@@ -8,11 +8,15 @@
       "play_data_output": "./data/play_data/output",
       "stage_data": "./data/stage_data"
     },
-    "models": "./models"
+    "models": "./models",
+    "configs": "./config",
+    "tests": "./tests",
+    "utils": "./utils"
   },
   "model": {
     "name": "unet",
-    "path": "./models/best_psnr_model.pth"
+    "architecture": "unet.py",
+    "weights": "best_psnr_model.pth"
   },
   "training": {
     "epochs": 24,
@@ -24,16 +28,22 @@
     "step_decrease_interval": 8,
     "img_height": 1920,
     "img_width": 1280
-
+  },
+  "optimizer": {
+    "type": "adam",
+    "params": {
+      "lr": 0.00004,
+      "weight_decay": 0.001
+    }
   },
   "scheduler": {
     "type": "ReduceLROnPlateau",
-    "params": {
-      "mode": "max",
-      "factor": 0.5,
-      "patience": 5,
-      "verbose": true
-    }
+      "params": {
+        "mode": "max",
+        "factor": 0.5,
+        "patience": 5,
+        "verbose": true
+        }   
   },
   "augmentation": {
     "color_jitter": {
@@ -45,5 +55,7 @@
       "hue": 0.1
     }
   }
-  
 }
+
+
+  

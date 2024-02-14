@@ -1,3 +1,4 @@
+# ./tests/test_gpu.py
 import torch
 
 if torch.cuda.is_available():

@@ -1,3 +1,4 @@
+# ./tests/test_img_size.py
 import os
 from PIL import Image
 
