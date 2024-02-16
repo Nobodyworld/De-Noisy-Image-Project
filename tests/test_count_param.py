@@ -11,7 +11,7 @@ root_dir = current_dir.parent
 models_dir = root_dir / 'models'
 sys.path.insert(0, str(models_dir))
 
-from models.unet import UNet  # Now you can directly import UNet
+from model_parts.unet import UNet  # Now you can directly import UNet
 
 # Function to load configuration
 def load_config(config_path):

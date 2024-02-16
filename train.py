@@ -6,7 +6,7 @@ from utils.testing import test
 from utils.checkpointing import save_checkpoint, load_checkpoint
 from utils.optim_scheduler import setup_optimizer_scheduler
 from utils.plotting import plot_metrics
-from models.unet import UNet
+from model_parts.unet import UNet
 import torch
 import torch.nn as nn
 import os

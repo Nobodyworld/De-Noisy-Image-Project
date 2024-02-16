@@ -3,7 +3,7 @@ import os
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
-from models.unet import UNet
+from model_parts.unet import UNet
 
 try:
     with open('config/config.json', 'r') as config_file:
