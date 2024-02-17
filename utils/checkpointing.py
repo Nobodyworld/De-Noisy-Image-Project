@@ -1,7 +1,7 @@
 # /utils/chekpointing.py
 import torch
 
-def save_checkpoint(state_dict, filename='best_psnr_denocoder_pytorch.pth'):
+def save_checkpoint(state_dict, filename='other_model.pth'):
     torch.save(state_dict, filename)
 
 def load_checkpoint(model, filename, device):

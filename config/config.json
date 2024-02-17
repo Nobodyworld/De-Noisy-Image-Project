@@ -16,7 +16,7 @@
   "model": {
     "name": "unet",
     "architecture": "unet.py",
-    "weights": "best_psnr_model.pth"
+    "weights": "other_model.pth"
   },
   "training": {
     "epochs": 24,
