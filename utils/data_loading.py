@@ -24,8 +24,8 @@ def get_dataloaders(config):
     test_dataset = PairedImageDataset(config['directories']['data']['test'], before_transform=transform, after_transform=transform)
 
     # Create DataLoaders using batch size from config
-    train_loader = DataLoader(train_dataset, batch_size=config['training']['batch_size'], shuffle=True, pin_memory=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=config['training']['batch_size'], shuffle=False, pin_memory=True, num_workers=4)
-    test_loader = DataLoader(test_dataset, batch_size=config['training']['batch_size'], shuffle=False, pin_memory=True, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=config['training']['batch_size'], shuffle=config['training']['shuffle'], pin_memory=config['training']['pin_memory'], num_workers=config['training']['num_workers'])
+    val_loader = DataLoader(val_dataset, batch_size=config['training']['batch_size'], shuffle=config['training']['shuffle'], pin_memory=config['training']['pin_memory'], num_workers=config['training']['num_workers'])
+    test_loader = DataLoader(test_dataset, batch_size=config['training']['batch_size'], shuffle=config['training']['shuffle'], pin_memory=config['training']['pin_memory'], num_workers=config['training']['num_workers'])
 
     return train_loader, val_loader, test_loader

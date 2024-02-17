@@ -16,14 +16,16 @@
   "model": {
     "name": "unet",
     "architecture": "unet.py",
-    "weights": "other_model.pth"
+    "path": "./models/other_model.pth"
   },
   "training": {
     "epochs": 24,
     "batch_size": 2,
     "accumulation_steps": 1,
-    "learning_rate": 0.001,
-    "weight_decay": 0.001,
+    "num_workers": 4,
+    "pin_memory": true,
+    "shuffle": true,
+    "early_stopping": true,
     "early_stopping_patience": 8,
     "step_decrease_interval": 8,
     "img_height": 1920,
