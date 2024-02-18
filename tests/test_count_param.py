@@ -2,42 +2,31 @@
 import torch
 import json
 import os
-from pathlib import Path
 import sys
 
-# Add the models directory to sys.path to make the unet module available
-current_dir = Path(__file__).parent
-root_dir = current_dir.parent
-models_dir = root_dir / 'models'
-sys.path.insert(0, str(models_dir))
+# Add the project root to the Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 
-from model_parts.unet import UNet  # Now you can directly import UNet
-
-# Function to load configuration
 def load_config(config_path):
     with open(config_path, 'r') as config_file:
-        return json.load(config_file)
+        config = json.load(config_file)
+    return config
 
-# Assuming this script is at the root of your project structure where config.json is also located
-config_path = os.path.join(root_dir, 'config/config.json')  # Adjust this if your config.json is located elsewhere
-
-# Load the configuration
+# Assuming the script is executed from the project root directory
+config_path = os.path.join(project_root, 'config', 'config.json')
 config = load_config(config_path)
 
-# Initialize the model
+from model_parts.unet import UNet
+
+# Initialize your model
 model = UNet()
 
-# Load the state dictionary from the saved model using the path from config.json
-model_checkpoint_path = config['model']['path']  # Get the model checkpoint path from config
+# Assuming model_checkpoint_path is relative to the project root
+model_checkpoint_path = os.path.join(project_root, config['model']['path'], config['model']['file_name'])
 
-# Assuming the model path is relative to the config.json's location
-model_checkpoint_full_path = os.path.join(root_dir, model_checkpoint_path)
-
-state_dict = torch.load(model_checkpoint_full_path, map_location=torch.device('cpu'))
-
-# Load the state dictionary into the model
+state_dict = torch.load(model_checkpoint_path, map_location=torch.device('cpu'))
 model.load_state_dict(state_dict)
 
-# Now you can count the trainable parameters
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"Number of trainable parameters: {total_params}")
