@@ -17,7 +17,7 @@ except json.JSONDecodeError:
 
 play_data = os.path.join(config['directories']['data']['play_data'])
 play_data_output = os.path.join(config['directories']['data']['play_data_output'])
-model_path = os.path.join(config['model']['path'])
+model_path = os.path.join(config['model']['path'] + config['model']['file_name'])
 
 print("Loading model from:", model_path)
 

@@ -1,7 +1,10 @@
 # /utils/plotting.py
 import matplotlib.pyplot as plt
+from threading import Timer
+import os
 
-def plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs, save_path=None):
+
+def plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs, config):
     plt.figure(figsize=(10, 5))
     plt.subplot(1, 2, 1)
     plt.plot(train_losses, label="Training Loss")
@@ -21,8 +24,27 @@ def plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs, save_path=Non
     plt.legend()
     plt.grid(True)
 
-    plt.tight_layout()
+    # Determine the base save path from config
+    model_dir = config['model']['path']
+    base_filename = "metrics_figure"
+    file_extension = ".png"
+    save_path = os.path.join(model_dir, base_filename + file_extension)
+    
+    # Check if the file exists and append a suffix if it does
+    counter = 1
+    while os.path.exists(save_path):
+        save_path = os.path.join(model_dir, f"{base_filename}_{counter}{file_extension}")
+        counter += 1
 
-    if save_path:
-        plt.savefig(save_path)
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(save_path)
+    print(f"Metrics figure saved to {save_path}")
+
+    # Function to close the plot
+    def close_plot():
+        plt.close()
+
+    # Create a timer that waits 5 seconds before closing the plot
+    timer = Timer(5.0, close_plot)
+    timer.start()
+    plt.show()  # Show the plot
