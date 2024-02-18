@@ -16,7 +16,7 @@
   "model": {
     "name": "unet",
     "architecture": "unet.py",
-    "path": "./models/other_model.pth"
+    "path": "./models/other_model/other_model.pth"
   },
   "training": {
     "epochs": 24,

@@ -20,7 +20,7 @@ def main():
     optimizer, scheduler = setup_optimizer_scheduler(model, config)
     l1_criterion = nn.L1Loss().to(device)
     mse_criterion = nn.MSELoss().to(device)
-    model_path = os.path.join(config['directories']['models'], config['model']['path'])
+    model_path = os.path.join(config['model']['path'])
     if os.path.exists(model_path):
         load_checkpoint(model, model_path, device)
         print(f"Model loaded from {model_path}.")
