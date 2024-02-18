@@ -6,6 +6,7 @@ def train_one_epoch(model, device, train_loader, optimizer, l1_criterion, mse_cr
     model.train()
     running_loss = 0.0
     running_psnr = 0.0
+    
     # Use get() method with a default value to avoid KeyError
     accumulation_steps = config.get('accumulation_steps', 1)
     

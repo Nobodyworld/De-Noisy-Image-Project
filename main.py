@@ -1,4 +1,4 @@
-# train.py
+# main.py
 from utils.config_manager import load_config
 from utils.data_loading import get_dataloaders
 from utils.training import train_one_epoch, validate
@@ -12,11 +12,11 @@ import torch.nn as nn
 import os
 
 def main():
-    config_path = os.path.join('config', 'config.json')
-    config = load_config(config_path)
+    config = load_config()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader, val_loader, test_loader = get_dataloaders(config)
     model = UNet().to(device)
+
     optimizer, scheduler = setup_optimizer_scheduler(model, config)
     l1_criterion = nn.L1Loss().to(device)
     mse_criterion = nn.MSELoss().to(device)
