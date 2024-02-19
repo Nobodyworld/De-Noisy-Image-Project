@@ -61,7 +61,7 @@ def main():
             break
         
     test_loss, test_psnr = test(model, device, test_loader, l1_criterion, mse_criterion)
-    plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs)
+    plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs, config)
     # Print statements for test_loss and test_psnr
     print(f"Test Loss: {test_loss}")
     print(f"Test PSNR: {test_psnr}")
