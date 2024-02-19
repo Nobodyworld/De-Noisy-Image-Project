@@ -39,12 +39,3 @@ def plot_metrics(train_losses, val_losses, train_psnrs, val_psnrs, config):
     plt.tight_layout()
     plt.savefig(save_path)
     print(f"Metrics figure saved to {save_path}")
-
-    # Function to close the plot
-    def close_plot():
-        plt.close()
-
-    # Create a timer that waits 5 seconds before closing the plot
-    timer = Timer(5.0, close_plot)
-    timer.start()
-    plt.show()  # Show the plot
