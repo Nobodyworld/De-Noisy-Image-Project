@@ -16,11 +16,11 @@
   "model": {
     "name": "unet",
     "architecture": "unet.py",
-    "path": "./models/other_model/",
+    "path": "./models/other_model2/",
     "file_name": "other_model.pth"
   },
   "training": {
-    "epochs": 24,
+    "epochs": 36,
     "batch_size": 2,
     "accumulation_steps": 1,
     "num_workers": 4,
