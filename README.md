@@ -1,15 +1,13 @@
-# De-Noisy-Image-Project
+# De-Noisy-Image-Project Small
 
-This repository contains scripts and directories for the "De-Noisy Image Project" using a U-Net architecture. (See "Small" and "Xtra-Small" repos for less needed compute.) The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles mentioned further below. (See lines 190-200 of `model.py`)
+This repository contains scripts and directories for the Small "De-Noisy Image Project" using a U-Net architecture. (See "xtra-small" for less needed compute.) The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles mentioned further below. (See lines 190-200 of `model.py`)
 
-https://github.com/Nobodyworld/De-Noisy-Image-Project-Small
- 
   """
     # Set batch size, image dimensions
-    batch_size = 2
-    img_height = 1920
-    img_width = 1280
-    epochs = 32
+    batch_size = 8
+    img_height = 960
+    img_width = 640
+    epochs = 48
   """
 
 Note: As you can see above we have reduced the image height and width significantly from the large repo for this project to account for less GPU or CPU compute power. Do not forget to run the `ztest_gpu.py` file to verify you have a connected cuda device.
@@ -102,6 +100,7 @@ This function defines the forward pass of the network. It sequentially applies a
 This architecture is a standard U-Net model used for tasks like image segmentation and denoising. The use of residual connections and skip connections typically helps in training deeper models more effectively.
 
 
+---
 
 ## ChatGPT Said...
 Your code provides a comprehensive setup for training a U-Net model for image denoising. It includes data loading, model definition, training, validation, testing, and plotting of training/validation loss. The overall structure seems sound. Here are a few observations and potential improvements:
@@ -133,95 +132,177 @@ Your code provides a comprehensive setup for training a U-Net model for image de
 Remember to test your code with a subset of your data first to ensure everything is functioning as expected. Also, keep track of your system's resources (like memory and disk space) when running the training, especially with large datasets or for a large number of epochs.
 
 
-## Enable your Nvidia GPU
-Follow the instructions from these various links to install CUDA, cuDNN, and determine the versions witht he support matrix.
-
-CUDA Quick Start Guide - https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#local-installer
-
-Install CUDA - https://docs.nvidia.com/cuda/archive/11.6.0/cuda-installation-guide-microsoft-windows/index.html
-
-Install cuDNN - https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows
-
-GPU Suppoort Matrix - https://docs.nvidia.com/deeplearning/cudnn/support-matrix/index.html#cudnn-cuda-hardware-versions
-
-
-This can be disheatening at times but follow the instructions carefully and you will be just fine. Run the `ztest_gpu.py` script to determine if you have your GPU enabled. An example of an enabled GPU console output can be viewed in the section below.
-
-## Example Script Outputs
-### /test_these.py
+##Example Script Outputs:
+/test_these.py
 PLEASE REFER to the test_these folder for inference.
 
-### /ztest_gpu.py
+/ztest_gpu.py
 GPU: NVIDIA GeForce RTX 3060
 tensor([5., 7., 9.], device='cuda:0')
 
-### /zcount_parameter.py
-Number of trainable parameters: 5158995
+/zcount_parameter.py
+Number of trainable parameters: 1488915
 
-### /model.py"
+/model.py"
 No pre-trained model found. Training from scratch.
-Epoch [1/32], Loss: 0.4423, PSNR: 9.2922
-Validation Loss: 0.4056, PSNR: 9.9336
-Epoch [2/32], Loss: 0.3627, PSNR: 10.6420
-Validation Loss: 0.3549, PSNR: 10.8065
-Epoch [3/32], Loss: 0.3114, PSNR: 11.7114
-Validation Loss: 0.3065, PSNR: 11.7591
-Epoch [4/32], Loss: 0.2657, PSNR: 12.8736
-Validation Loss: 0.2396, PSNR: 13.6222
-Epoch [5/32], Loss: 0.2262, PSNR: 14.0401
-Validation Loss: 0.2355, PSNR: 13.8352
-Epoch [6/32], Loss: 0.1901, PSNR: 15.3750
-Validation Loss: 0.2652, PSNR: 13.7730
-Epoch [7/32], Loss: 0.1618, PSNR: 16.6132
-Validation Loss: 0.1581, PSNR: 16.7714
-Epoch [8/32], Loss: 0.1367, PSNR: 17.8996
-Validation Loss: 0.1240, PSNR: 18.7317
-Epoch [9/32], Loss: 0.1165, PSNR: 19.1519
-Validation Loss: 0.1109, PSNR: 19.6430
-Epoch [10/32], Loss: 0.1017, PSNR: 20.1655
-Validation Loss: 0.1003, PSNR: 20.4135
-Epoch [11/32], Loss: 0.0908, PSNR: 21.0079
-Validation Loss: 0.0894, PSNR: 20.7365
-Epoch [12/32], Loss: 0.0822, PSNR: 21.7378
-Validation Loss: 0.0776, PSNR: 22.5518
-Epoch [13/32], Loss: 0.0758, PSNR: 22.3025
-Validation Loss: 0.0747, PSNR: 22.7752
-Epoch [14/32], Loss: 0.0709, PSNR: 22.7352
-Validation Loss: 0.0700, PSNR: 23.1187
-Epoch [15/32], Loss: 0.0685, PSNR: 23.0095
-Validation Loss: 0.0610, PSNR: 23.7705
-Epoch [16/32], Loss: 0.0647, PSNR: 23.3626
-Validation Loss: 0.0593, PSNR: 24.3658
-Epoch [17/32], Loss: 0.0622, PSNR: 23.6591
-Validation Loss: 0.0586, PSNR: 24.3017
-Epoch [18/32], Loss: 0.0622, PSNR: 23.6446
-Validation Loss: 0.0538, PSNR: 24.8763
-Epoch [19/32], Loss: 0.0596, PSNR: 23.9008
-Validation Loss: 0.0531, PSNR: 24.9018
-Epoch [20/32], Loss: 0.0599, PSNR: 23.9102
-Validation Loss: 0.0560, PSNR: 24.9599
-Epoch [21/32], Loss: 0.0579, PSNR: 24.1470
-Validation Loss: 0.0652, PSNR: 23.6269
-Epoch [22/32], Loss: 0.0573, PSNR: 24.1552
-Validation Loss: 0.0511, PSNR: 25.0166
-Epoch [23/32], Loss: 0.0573, PSNR: 24.2055
-Validation Loss: 0.0507, PSNR: 25.2434
-Epoch [24/32], Loss: 0.0561, PSNR: 24.3089
-Validation Loss: 0.0524, PSNR: 25.0755
-Epoch [25/32], Loss: 0.0584, PSNR: 24.1095
-Validation Loss: 0.0537, PSNR: 24.7750
-Epoch [26/32], Loss: 0.0559, PSNR: 24.3107
-Validation Loss: 0.0493, PSNR: 25.4217
-Epoch [27/32], Loss: 0.0567, PSNR: 24.2692
-Validation Loss: 0.0526, PSNR: 25.4229
-Epoch [28/32], Loss: 0.0536, PSNR: 24.6227
-Validation Loss: 0.0528, PSNR: 25.2008
-Epoch [29/32], Loss: 0.0540, PSNR: 24.5950
-Validation Loss: 0.0492, PSNR: 25.5453
-Epoch [30/32], Loss: 0.0533, PSNR: 24.6575
-Validation Loss: 0.0568, PSNR: 24.3292
-Epoch [31/32], Loss: 0.0551, PSNR: 24.5233
-Validation Loss: 0.0532, PSNR: 25.0379
-Epoch [32/32], Loss: 0.0541, PSNR: 24.6063
-Validation Loss: 0.0541, PSNR: 25.2656
-Test Loss: 0.0580, PSNR: 24.9193
+Epoch [1/48], Loss: 0.4590, PSNR: 9.0256
+Validation Loss: 0.4111, PSNR: 9.7463
+Epoch [2/48], Loss: 0.3906, PSNR: 10.1210
+Validation Loss: 0.3656, PSNR: 10.5915
+Epoch [3/48], Loss: 0.3631, PSNR: 10.6348
+Validation Loss: 0.3496, PSNR: 10.9311
+Epoch [4/48], Loss: 0.3445, PSNR: 11.0200
+Validation Loss: 0.3428, PSNR: 11.0771
+Epoch [5/48], Loss: 0.3273, PSNR: 11.3700
+Validation Loss: 0.3229, PSNR: 11.5076
+Epoch [6/48], Loss: 0.3136, PSNR: 11.6636
+Validation Loss: 0.3014, PSNR: 11.9478
+Epoch [7/48], Loss: 0.2995, PSNR: 11.9669
+Validation Loss: 0.2823, PSNR: 12.3748
+Epoch [8/48], Loss: 0.2856, PSNR: 12.2870
+Validation Loss: 0.2868, PSNR: 12.3015
+Epoch [9/48], Loss: 0.2760, PSNR: 12.5328
+Validation Loss: 0.2594, PSNR: 12.9594
+Epoch [10/48], Loss: 0.2644, PSNR: 12.8281
+Validation Loss: 0.2585, PSNR: 13.0038
+Epoch [11/48], Loss: 0.2539, PSNR: 13.1152
+Validation Loss: 0.2548, PSNR: 13.1207
+Epoch [12/48], Loss: 0.2438, PSNR: 13.3911
+Validation Loss: 0.2331, PSNR: 13.7125
+Epoch [13/48], Loss: 0.2349, PSNR: 13.6553
+Validation Loss: 0.2268, PSNR: 13.9173
+Epoch [14/48], Loss: 0.2251, PSNR: 13.9547
+Validation Loss: 0.2127, PSNR: 14.3588
+Epoch [15/48], Loss: 0.2171, PSNR: 14.2186
+Validation Loss: 0.2056, PSNR: 14.6265
+Epoch [16/48], Loss: 0.2083, PSNR: 14.5040
+Validation Loss: 0.2001, PSNR: 14.7708
+Epoch [17/48], Loss: 0.1996, PSNR: 14.8151
+Validation Loss: 0.2000, PSNR: 14.8162
+Epoch [18/48], Loss: 0.1921, PSNR: 15.0934
+Validation Loss: 0.1840, PSNR: 15.3575
+Epoch [19/48], Loss: 0.1849, PSNR: 15.3527
+Validation Loss: 0.1888, PSNR: 15.1795
+Epoch [20/48], Loss: 0.1779, PSNR: 15.6158
+Validation Loss: 0.1744, PSNR: 15.8039
+Epoch [21/48], Loss: 0.1722, PSNR: 15.8854
+Validation Loss: 0.1675, PSNR: 16.1288
+Epoch [22/48], Loss: 0.1649, PSNR: 16.1948
+Validation Loss: 0.1599, PSNR: 16.4019
+Epoch [23/48], Loss: 0.1585, PSNR: 16.5062
+Validation Loss: 0.1549, PSNR: 16.7032
+Epoch [24/48], Loss: 0.1544, PSNR: 16.7112
+Validation Loss: 0.1499, PSNR: 17.0306
+Epoch [25/48], Loss: 0.1469, PSNR: 17.0932
+Validation Loss: 0.1374, PSNR: 17.5503
+Epoch [26/48], Loss: 0.1417, PSNR: 17.3295
+Validation Loss: 0.1383, PSNR: 17.5362
+Epoch [27/48], Loss: 0.1368, PSNR: 17.6108
+Validation Loss: 0.1281, PSNR: 18.0941
+Epoch [28/48], Loss: 0.1323, PSNR: 17.8748
+Validation Loss: 0.1219, PSNR: 18.4767
+Epoch [29/48], Loss: 0.1278, PSNR: 18.1278
+Validation Loss: 0.1273, PSNR: 18.2552
+Epoch [30/48], Loss: 0.1240, PSNR: 18.3380
+Validation Loss: 0.1200, PSNR: 18.6236
+Epoch [31/48], Loss: 0.1210, PSNR: 18.5212
+Validation Loss: 0.1208, PSNR: 18.5556
+Epoch [32/48], Loss: 0.1163, PSNR: 18.8424
+Validation Loss: 0.1123, PSNR: 19.1592
+Epoch [33/48], Loss: 0.1123, PSNR: 19.0597
+Validation Loss: 0.1119, PSNR: 19.1459
+Epoch [34/48], Loss: 0.1074, PSNR: 19.3705
+Validation Loss: 0.0977, PSNR: 20.0343
+Epoch [35/48], Loss: 0.1042, PSNR: 19.5855
+Validation Loss: 0.1026, PSNR: 19.7171
+Epoch [36/48], Loss: 0.1008, PSNR: 19.8480
+Validation Loss: 0.0978, PSNR: 20.1919
+Epoch [37/48], Loss: 0.0995, PSNR: 19.8962
+Validation Loss: 0.0949, PSNR: 20.2933
+Epoch [38/48], Loss: 0.0963, PSNR: 20.1377
+Validation Loss: 0.0900, PSNR: 20.6487
+Epoch [39/48], Loss: 0.0927, PSNR: 20.4455
+Validation Loss: 0.0891, PSNR: 20.8581
+Epoch [40/48], Loss: 0.0908, PSNR: 20.5816
+Validation Loss: 0.0875, PSNR: 20.9049
+Epoch [41/48], Loss: 0.0889, PSNR: 20.7054
+Validation Loss: 0.0820, PSNR: 21.2531
+Epoch [42/48], Loss: 0.0861, PSNR: 20.9458
+Validation Loss: 0.0850, PSNR: 21.2291
+Epoch [43/48], Loss: 0.0846, PSNR: 21.0837
+Validation Loss: 0.0804, PSNR: 21.5047
+Epoch [44/48], Loss: 0.0830, PSNR: 21.1821
+Validation Loss: 0.0805, PSNR: 21.6124
+Epoch [45/48], Loss: 0.0802, PSNR: 21.4567
+Validation Loss: 0.0785, PSNR: 21.7757
+Epoch [46/48], Loss: 0.0794, PSNR: 21.5219
+Validation Loss: 0.0734, PSNR: 22.1452
+Epoch [47/48], Loss: 0.0793, PSNR: 21.5721
+Validation Loss: 0.0736, PSNR: 22.1541
+Epoch [48/48], Loss: 0.0774, PSNR: 21.6938
+Validation Loss: 0.0686, PSNR: 22.5416
+Test Loss: 0.0716, PSNR: 22.2195
+
+
+
+# Image Processing Scripts
+This directory contains a collection of Python scripts designed to assist in the management and preparation of image datasets for a larger project. The primary function of these scripts is to consolidate 'before' and 'after' images into the `resized_imgs` folder for resizing, editing, and additions. After you can redistribute them into `test`, `train`, and `validate` folders for further use.
+
+## Overview of Scripts
+1. **`zmoveimgs.py`**: This is the primary script used for MOVE OUT images into training, validation, and test datasets. It segregates the images from the `resized_imgs` folder into `train`, `val`, and `test` folders, each having `clean` and `noisy` subfolders.
+
+2. **`zgetimgs.py`**: This script is designed for moving images BACK INTO the resized_imgs folder from the train, val, and test directories. It effectively reverses the actions of zmoveimgs.py. Each image pair, consisting of a 'before' image from the noisy subfolders and an 'after' image from the clean subfolders, is relocated back to the resized_imgs folder. This is particularly useful when you need to consolidate your dataset back into a single directory, either for additional preprocessing steps or for archiving.
+
+3. **`zresizeimgs.py`**: Use this script to resize images in the `resized_imgs` folder. It should be run before `zmove.py` if you have added new jpeg images to the resized images directory to ensure all images are of uniform size.
+
+4. **`zname.py` and `zrename.py`**: If you add new images to the data set you can consider using these. The name scripts are used for renaming images to match the standard convention fo the project. They should be used cautiously to avoid disrupting the naming convention of your dataset. It's recommended to make backups before using these scripts.
+
+
+## Instructions
+### Setup
+Ensure that all images are initially placed in the `resized_imgs` directory. The directory structure for the `train`, `val`, and `test` folders will be created automatically by the scripts.
+
+### Using `zresizeimgs.py`
+Run this script to resize all images in the `resized_imgs` folder. This is an essential step to standardize image sizes across your dataset, and will throw an error if you during training if you have an image in which the aspect ratio is mismatched with the array being used for matrix multiplication. 
+
+Simple Example: If we have a 2:3 and a 3:4 image, in terms of aspect ratio the dot products would mismatch as follows.....
+    """
+      2x3:               3x4:
+      x-x-Error          x-x-x
+      x-x-Error          x-x-x
+      x-x-Error          x-x-x
+      Error-Error-Error  x-x-x
+    """
+Note: Though this a simple example, a nugget to take away from this is that if we have the same aspect ratio across two different images we can normalize before the training step of 'model.py' or maintain consideration as to the intrinsic meaning of what we could accomplish with different size images and relative aspect ratios. (I have not been creative or logical enough to come up with a significant use case, but I am sure a very powerful one exists.)
+
+### Using `zmove.py`
+This script is the main tool for distributing images into appropriate datasets. It randomly assigns images to the `train`, `val`, and `test` folders based on specified proportions.
+
+1. **Running the Script**: Simply execute `zmove.py`. The script will automatically shuffle and distribute the images.
+
+2. **Folder Structure**:
+   - `train/clean`
+   - `train/noisy`
+   - `val/clean`
+   - `val/noisy`
+   - `test/clean`
+   - `test/noisy`
+
+### Using `zname.py` and `zrename.py`
+These scripts are used for renaming image files. They must be used with caution to maintain the integrity of your dataset.
+
+1. **Backup First**: Always create a backup of your images before running these scripts.
+
+2. **Testing on a Subset**: Try these scripts on a small set of images first to ensure they work as expected.
+
+3. **Running the Scripts**: Use `zname.py` for initial naming and `zrename.py` for any subsequent renaming needs.
+
+## Caution
+- **Backup**: Always backup your images before using `zname.py` and `zrename.py`.
+- **Testing**: Test the scripts on a small subset of your images first.
+- **Order of Execution**: Run `zresizeimgs.py` before `zmove.py` to ensure all images are properly sized.
+
+## Additional Notes
+This folder is part of a larger project focused on image processing. The scripts are tailored for a specific workflow involving the preparation of image datasets. For any modifications or custom use-cases, please review and adjust the scripts accordingly.
+
+---
