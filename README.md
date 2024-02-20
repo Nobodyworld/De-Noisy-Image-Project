@@ -1,13 +1,21 @@
-# De-Noisy-Image-Project Small
+# De-Noisy-Image-Project
 
-This repository contains scripts and directories for the Small "De-Noisy Image Project" using a U-Net architecture. (See "xtra-small" for less needed compute.) The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles mentioned further below. (See lines 190-200 of `model.py`)
+This repository contains scripts and directories for the "De-Noisy Image Project" using a U-Net architecture. (See "xtra-small" for less needed compute.) The main components are the `resized_imgs` folder for storing and preprocessing images before training, `test_these` for extra inference, and the `model.py` script for training and architecture. The `model.py` will run without an NVIDIA GPU but you should consider reducing the image sizes, the number of layers, or these varaibles mentioned further below. 
 
-  """
-    # Set batch size, image dimensions
-    batch_size = 8
-    img_height = 960
-    img_width = 640
-    epochs = 48
+  """JSON
+  "training": {
+    "epochs": 36,
+    "batch_size": 2,
+    "accumulation_steps": 1,
+    "num_workers": 4,
+    "pin_memory": true,
+    "shuffle": true,
+    "early_stopping": true,
+    "early_stopping_patience": 8,
+    "step_decrease_interval": 8,
+    "img_height": 1920,
+    "img_width": 1280
+  }
   """
 
 Note: As you can see above we have reduced the image height and width significantly from the large repo for this project to account for less GPU or CPU compute power. Do not forget to run the `ztest_gpu.py` file to verify you have a connected cuda device.
