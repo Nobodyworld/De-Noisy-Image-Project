@@ -16,7 +16,7 @@
   "model": {
     "name": "unet",
     "architecture": "unet.py",
-    "path": "./models/other_model2/",
+    "path": "./models/other_model/",
     "file_name": "other_model.pth"
   },
   "training": {
