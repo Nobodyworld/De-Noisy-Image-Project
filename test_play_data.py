@@ -1,9 +1,9 @@
 import json
 import os
 import torch
-import torchvision.transforms as transforms
 from PIL import Image
 from model_parts.unet import UNet
+from utils.transforms import get_transforms, tensor_to_pil
 
 try:
     with open('config/config.json', 'r') as config_file:
@@ -39,10 +39,7 @@ except RuntimeError as e:
 model = model.to(device)
 model.eval()
 
-before_transform = transforms.Compose([
-    transforms.Resize((img_height, img_width), antialias=True),            
-    transforms.ToTensor(),
-])
+before_transform = get_transforms(config)
 
 def process_single_image(input_img_path, output_img_path, before_transform):
     try:
@@ -61,7 +58,7 @@ def process_single_image(input_img_path, output_img_path, before_transform):
         output_batch = model(input_batch)
     
     output_tensor = output_batch.squeeze(0).cpu()
-    output_img = transforms.ToPILImage()(output_tensor)
+    output_img = tensor_to_pil(output_tensor)
 
     try:
         output_img.save(output_img_path)

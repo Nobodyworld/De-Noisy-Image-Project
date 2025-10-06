@@ -1,19 +1,168 @@
 # /utils/transforms.py
-import torchvision
-from utils.transforms import RandomColorJitterWithRandomFactors
+"""Lightweight image transform utilities that avoid heavy dependencies."""
 
-def get_transforms(config):
-    transforms_list = [torchvision.transforms.Resize((config['training']['img_height'], config['training']['img_width']))]
+from __future__ import annotations
 
-    if config['augmentation']['color_jitter']['enabled']:
-        jitter_params = config['augmentation']['color_jitter']
-        transforms_list.append(RandomColorJitterWithRandomFactors(
-            brightness=jitter_params['brightness'],
-            contrast=jitter_params['contrast'],
-            saturation=jitter_params['saturation'],
-            hue=jitter_params['hue'],
-            p=jitter_params['p']
-        ))
+import random
+from typing import Callable, Iterable, Tuple
 
-    transforms_list.append(torchvision.transforms.ToTensor())
-    return torchvision.transforms.Compose(transforms_list)
+from PIL import Image, ImageEnhance
+import torch
+
+try:  # Pillow < 10 compatibility
+    _Resampling = Image.Resampling
+except AttributeError:  # pragma: no cover - fallback for very old Pillow
+    _Resampling = Image
+
+
+class Compose:
+    """Apply a sequence of callables in order."""
+
+    def __init__(self, transforms: Iterable[Callable[[Image.Image], Image.Image | torch.Tensor]]):
+        self.transforms = list(transforms)
+
+    def __call__(self, image: Image.Image) -> Image.Image | torch.Tensor:
+        result: Image.Image | torch.Tensor = image
+        for transform in self.transforms:
+            result = transform(result)
+        return result
+
+
+class Resize:
+    """Resize a PIL image to the specified (width, height)."""
+
+    def __init__(self, size: Tuple[int, int], resample: int = _Resampling.BILINEAR):
+        self.size = size
+        self.resample = resample
+
+    def __call__(self, image: Image.Image) -> Image.Image:
+        return image.resize(self.size, resample=self.resample)
+
+
+def _pil_to_tensor(image: Image.Image) -> torch.Tensor:
+    """Convert a PIL image to a normalised float tensor without NumPy."""
+
+    if image.mode == "L":
+        processed = image
+        num_channels = 1
+    else:
+        processed = image.convert("RGB")
+        num_channels = 3
+
+    byte_tensor = torch.ByteTensor(torch.ByteStorage.from_buffer(processed.tobytes()))
+    height, width = processed.size[1], processed.size[0]
+    byte_tensor = byte_tensor.view(height, width, num_channels)
+    float_tensor = byte_tensor.permute(2, 0, 1).to(dtype=torch.float32) / 255.0
+    return float_tensor
+
+
+class ToTensor:
+    """Convert a PIL image to a PyTorch tensor."""
+
+    def __call__(self, image: Image.Image) -> torch.Tensor:
+        return _pil_to_tensor(image)
+
+
+def tensor_to_pil(tensor: torch.Tensor) -> Image.Image:
+    """Convert a CHW tensor in the range [0, 1] back to a PIL image."""
+
+    if tensor.dim() != 3:
+        raise ValueError("Expected a 3D tensor in CHW format")
+
+    tensor = tensor.detach().cpu().clamp(0.0, 1.0)
+    channels, height, width = tensor.shape
+    byte_tensor = (tensor * 255).to(torch.uint8)
+
+    if channels == 1:
+        mode = "L"
+        flat = byte_tensor.view(-1)
+    elif channels == 3:
+        mode = "RGB"
+        flat = byte_tensor.permute(1, 2, 0).contiguous().view(-1)
+    else:
+        raise ValueError(f"Unsupported number of channels: {channels}")
+
+    return Image.frombytes(mode, (width, height), bytes(flat.tolist()))
+
+
+class RandomColorJitterWithRandomFactors:
+    """Apply colour jitter with individual random factors per call."""
+
+    def __init__(
+        self,
+        brightness: float = 0.0,
+        contrast: float = 0.0,
+        saturation: float = 0.0,
+        hue: float = 0.0,
+        p: float = 0.0,
+    ) -> None:
+        self.brightness = max(0.0, float(brightness))
+        self.contrast = max(0.0, float(contrast))
+        self.saturation = max(0.0, float(saturation))
+        self.hue = max(0.0, float(hue))
+        self.p = max(0.0, min(1.0, float(p)))
+
+    def _sample_factor(self, value: float) -> float:
+        if value <= 0.0:
+            return 1.0
+        low = max(0.0, 1.0 - value)
+        high = 1.0 + value
+        return random.uniform(low, high)
+
+    def _adjust_hue(self, image: Image.Image, factor: float) -> Image.Image:
+        if factor == 0.0:
+            return image
+        hsv = image.convert("HSV")
+        h, s, v = hsv.split()
+        offset = int(factor * 255) % 255
+        h = h.point(lambda px: (px + offset) % 255)
+        return Image.merge("HSV", (h, s, v)).convert("RGB")
+
+    def __call__(self, image: Image.Image) -> Image.Image:
+        if random.random() > self.p:
+            return image
+
+        result = image
+        if self.brightness > 0.0:
+            result = ImageEnhance.Brightness(result).enhance(self._sample_factor(self.brightness))
+        if self.contrast > 0.0:
+            result = ImageEnhance.Contrast(result).enhance(self._sample_factor(self.contrast))
+        if self.saturation > 0.0:
+            result = ImageEnhance.Color(result).enhance(self._sample_factor(self.saturation))
+        if self.hue > 0.0:
+            hue_factor = random.uniform(-self.hue, self.hue)
+            result = self._adjust_hue(result, hue_factor)
+        return result
+
+
+def get_transforms(config: dict) -> Compose:
+    """Create a transform pipeline based on the configuration dictionary."""
+
+    width = config['training']['img_width']
+    height = config['training']['img_height']
+    transforms: list[Callable[[Image.Image], Image.Image | torch.Tensor]] = [Resize((width, height))]
+
+    jitter_cfg = config.get('augmentation', {}).get('color_jitter', {})
+    if jitter_cfg.get('enabled'):
+        transforms.append(
+            RandomColorJitterWithRandomFactors(
+                brightness=jitter_cfg.get('brightness', 0.0),
+                contrast=jitter_cfg.get('contrast', 0.0),
+                saturation=jitter_cfg.get('saturation', 0.0),
+                hue=jitter_cfg.get('hue', 0.0),
+                p=jitter_cfg.get('p', 0.0),
+            )
+        )
+
+    transforms.append(ToTensor())
+    return Compose(transforms)
+
+
+__all__ = [
+    "Compose",
+    "Resize",
+    "ToTensor",
+    "tensor_to_pil",
+    "RandomColorJitterWithRandomFactors",
+    "get_transforms",
+]
