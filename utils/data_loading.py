@@ -1,18 +1,12 @@
 # /utils/data_loading.py
-from torchvision import transforms
 from torch.utils.data import DataLoader
 from utils.pairedimage_dataset import PairedImageDataset
+from utils.transforms import get_transforms as _build_transforms
+
 
 def get_transforms(config):
-    """Generate torchvision transforms based on config."""
-    img_height = config['training']['img_height']
-    img_width = config['training']['img_width']
-
-    transform = transforms.Compose([
-        transforms.Resize((img_height, img_width)),
-        transforms.ToTensor(),
-    ])
-    return transform
+    """Thin wrapper so existing imports keep working."""
+    return _build_transforms(config)
 
 def get_dataloaders(config):
     """Create DataLoader for training, validation, and testing datasets."""
