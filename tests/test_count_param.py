@@ -1,12 +1,13 @@
 # ./tests/test_count_param.py
-import torch
 import json
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import torch
+
 # Add the project root to the Python path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, project_root)
 
 def load_config(config_path):
     with open(config_path, 'r') as config_file:

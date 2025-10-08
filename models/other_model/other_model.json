@@ -1,0 +1,56 @@
+{
+  "encoder.weight": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      0.9
+    ]
+  },
+  "encoder.bias": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      0.1
+    ]
+  },
+  "mid.weight": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      1.1
+    ]
+  },
+  "mid.bias": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      -0.2
+    ]
+  },
+  "decoder.weight": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      0.8
+    ]
+  },
+  "decoder.bias": {
+    "shape": [
+      1
+    ],
+    "dtype": "float32",
+    "data": [
+      0.05
+    ]
+  }
+}

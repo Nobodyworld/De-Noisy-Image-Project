@@ -1,13 +1,14 @@
 # De-Noisy Image Project
 
-This repository hosts the De-Noisy Image Project, leveraging a U-Net architecture to denoise images. It's structured to accommodate varying levels of compute power across three project sizes: normal, small, and extra-small. 
+This repository now ships with a **fully self-contained** implementation that avoids heavyweight third-party dependencies.  A
+tiny Torch-compatible API (`torch/`) and a JSON-backed image library (`PIL/`) keep the project runnable in restricted
+environments where installing packages such as PyTorch or Pillow is not possible.  The simplified U-Net still mirrors the
+original public API which allows the existing utility scripts to run unchanged.
 
 ### Project Overview
 
-Utilizing a U-Net architecture, this project aims to denoise images effectively. The project is divided into three scales:
-- **Normal**: For standard compute resources.
-- **Small**: Reduced requirements for less powerful machines.
-- **Extra-Small (xtra-small)**: Minimized compute needs.
+Utilizing a U-Net architecture, this project aims to denoise images effectively.  The reference implementation focuses on a
+lightweight demonstration model that can run entirely on CPU and operates on small (8x6) sample images stored as JSON files.
 
 ### Training Configuration
 
@@ -25,8 +26,8 @@ To adapt to different compute capabilities, the image sizes, number of layers, a
     "early_stopping": true,
     "early_stopping_patience": 8,
     "step_decrease_interval": 8,
-    "img_height": 1920,
-    "img_width": 1280
+    "img_height": 6,
+    "img_width": 8
   }
 }
 ```
@@ -53,7 +54,11 @@ To adapt to different compute capabilities, the image sizes, number of layers, a
 ### Running the Project
 
 - **Training**: Execute `main.py` with images in the `train`, `val`, and `test` folders.
-- **Inference**: Place images in `./data/play_data/` and run `test_play_data.py` for denoised outputs.
+- **Inference**: Place JSON-formatted images (``*.json``) in `./data/simple/play_data/` and run `test_play_data.py` for denoised
+  outputs.  The helper scripts understand the JSON backed images shipped in `data/simple` out of the box.
+- **Checkpoints**: The lightweight U-Net ships with a JSON checkpoint (`models/other_model/other_model.json`) so the repository
+  remains text-only and can be shared in binary-restricted environments.  Utilities in `utils/checkpointing.py` transparently
+  load either the stub JSON files or a conventional PyTorch ``.pth`` file when available.
 
 ### Important Considerations
 

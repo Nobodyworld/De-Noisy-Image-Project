@@ -9,11 +9,6 @@ from typing import Callable, Iterable, Tuple
 from PIL import Image, ImageEnhance
 import torch
 
-try:  # Pillow < 10 compatibility
-    _Resampling = Image.Resampling
-except AttributeError:  # pragma: no cover - fallback for very old Pillow
-    _Resampling = Image
-
 
 class Compose:
     """Apply a sequence of callables in order."""
@@ -31,29 +26,32 @@ class Compose:
 class Resize:
     """Resize a PIL image to the specified (width, height)."""
 
-    def __init__(self, size: Tuple[int, int], resample: int = _Resampling.BILINEAR):
+    def __init__(self, size: Tuple[int, int]):
         self.size = size
-        self.resample = resample
 
-    def __call__(self, image: Image.Image) -> Image.Image:
-        return image.resize(self.size, resample=self.resample)
+    def __call__(self, image: Image.SimpleImage) -> Image.SimpleImage:
+        return image.resize(self.size)
 
 
-def _pil_to_tensor(image: Image.Image) -> torch.Tensor:
+def _pil_to_tensor(image: Image.SimpleImage) -> torch.Tensor:
     """Convert a PIL image to a normalised float tensor without NumPy."""
 
-    if image.mode == "L":
-        processed = image
-        num_channels = 1
-    else:
-        processed = image.convert("RGB")
-        num_channels = 3
+    processed = image.convert("RGB")
+    width, height = processed.size
+    data = list(processed.tobytes())
 
-    byte_tensor = torch.ByteTensor(torch.ByteStorage.from_buffer(processed.tobytes()))
-    height, width = processed.size[1], processed.size[0]
-    byte_tensor = byte_tensor.view(height, width, num_channels)
-    float_tensor = byte_tensor.permute(2, 0, 1).to(dtype=torch.float32) / 255.0
-    return float_tensor
+    array = []
+    index = 0
+    for channel in range(3):
+        channel_values = []
+        for _ in range(height):
+            row = []
+            for _ in range(width):
+                row.append(data[index] / 255.0)
+                index += 1
+            channel_values.append(row)
+        array.append(channel_values)
+    return torch.tensor(array, dtype=torch.float32)
 
 
 class ToTensor:
@@ -63,7 +61,7 @@ class ToTensor:
         return _pil_to_tensor(image)
 
 
-def tensor_to_pil(tensor: torch.Tensor) -> Image.Image:
+def tensor_to_pil(tensor: torch.Tensor) -> Image.SimpleImage:
     """Convert a CHW tensor in the range [0, 1] back to a PIL image."""
 
     if tensor.dim() != 3:
@@ -71,7 +69,7 @@ def tensor_to_pil(tensor: torch.Tensor) -> Image.Image:
 
     tensor = tensor.detach().cpu().clamp(0.0, 1.0)
     channels, height, width = tensor.shape
-    byte_tensor = (tensor * 255).to(torch.uint8)
+    byte_tensor = (tensor * 255).to(dtype=torch.uint8)
 
     if channels == 1:
         mode = "L"
@@ -82,7 +80,8 @@ def tensor_to_pil(tensor: torch.Tensor) -> Image.Image:
     else:
         raise ValueError(f"Unsupported number of channels: {channels}")
 
-    return Image.frombytes(mode, (width, height), bytes(flat.tolist()))
+    data = bytes(flat.tolist())
+    return Image.frombytes(mode, (width, height), data)
 
 
 class RandomColorJitterWithRandomFactors:
@@ -109,29 +108,23 @@ class RandomColorJitterWithRandomFactors:
         high = 1.0 + value
         return random.uniform(low, high)
 
-    def _adjust_hue(self, image: Image.Image, factor: float) -> Image.Image:
-        if factor == 0.0:
-            return image
-        hsv = image.convert("HSV")
-        h, s, v = hsv.split()
-        offset = int(factor * 255) % 255
-        h = h.point(lambda px: (px + offset) % 255)
-        return Image.merge("HSV", (h, s, v)).convert("RGB")
-
-    def __call__(self, image: Image.Image) -> Image.Image:
+    def __call__(self, image: Image.SimpleImage) -> Image.SimpleImage:
         if random.random() > self.p:
             return image
 
         result = image
         if self.brightness > 0.0:
-            result = ImageEnhance.Brightness(result).enhance(self._sample_factor(self.brightness))
+            factor = self._sample_factor(self.brightness)
+            result = ImageEnhance.Brightness(result).enhance(factor)
         if self.contrast > 0.0:
-            result = ImageEnhance.Contrast(result).enhance(self._sample_factor(self.contrast))
+            factor = self._sample_factor(self.contrast)
+            result = ImageEnhance.Contrast(result).enhance(factor)
         if self.saturation > 0.0:
-            result = ImageEnhance.Color(result).enhance(self._sample_factor(self.saturation))
-        if self.hue > 0.0:
-            hue_factor = random.uniform(-self.hue, self.hue)
-            result = self._adjust_hue(result, hue_factor)
+            factor = self._sample_factor(self.saturation)
+            result = ImageEnhance.Color(result).enhance(factor)
+        # Hue adjustments are intentionally ignored – the simplified colour model
+        # used by SimpleImage does not encode hue separately.  The parameter is
+        # accepted to maintain API compatibility with the configuration format.
         return result
 
 

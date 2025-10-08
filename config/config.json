@@ -1,12 +1,12 @@
 {
   "directories": {
     "data": {
-      "train": "./data/train",
-      "test": "./data/test",
-      "val": "./data/val",
-      "play_data": "./data/play_data",
-      "play_data_output": "./data/play_data/output",
-      "stage_data": "./data/stage_data"
+      "train": "./data/simple/train",
+      "test": "./data/simple/test",
+      "val": "./data/simple/val",
+      "play_data": "./data/simple/play_data",
+      "play_data_output": "./data/simple/play_data/output",
+      "stage_data": "./data/simple/stage_data"
     },
     "models": "./models",
     "config": "./config",
@@ -17,7 +17,7 @@
     "name": "unet",
     "architecture": "unet.py",
     "path": "./models/other_model/",
-    "file_name": "other_model.pth"
+    "file_name": "other_model.json"
   },
   "training": {
     "epochs": 36,
@@ -29,8 +29,8 @@
     "early_stopping": true,
     "early_stopping_patience": 8,
     "step_decrease_interval": 8,
-    "img_height": 1920,
-    "img_width": 1280
+    "img_height": 6,
+    "img_width": 8
   },
   "optimizer": {
     "type": "adam",

@@ -75,7 +75,7 @@ def process_all_images(play_data, play_data_output, before_transform):
     for file_name in os.listdir(play_data):
         input_file_path = os.path.join(play_data, file_name)
         
-        if os.path.isfile(input_file_path) and file_name.lower().endswith(('.png', '.jpg', '.jpeg')):
+        if os.path.isfile(input_file_path) and file_name.lower().endswith(('.json', '.png', '.jpg', '.jpeg')):
             output_file_path = os.path.join(play_data_output, file_name).replace('_before', '_after')
             process_single_image(input_file_path, output_file_path, before_transform)
 
