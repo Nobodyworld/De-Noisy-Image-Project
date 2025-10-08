@@ -1,4 +1,8 @@
 # ./tests/test_gpu.py
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 
 if torch.cuda.is_available():

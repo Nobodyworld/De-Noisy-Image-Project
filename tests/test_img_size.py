@@ -1,6 +1,8 @@
 # ./tests/test_img_size.py
 import os
 import json
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PIL import Image
 
 def load_config(config_path):
@@ -13,7 +15,7 @@ def find_images_with_different_size(root_dirs, width, height):
         print(f"Checking images in: {root_dir}")
         for root, _, files in os.walk(root_dir):
             for file in files:
-                if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
+                if file.lower().endswith(('.json', '.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
                     file_path = os.path.join(root, file)
                     try:
                         with Image.open(file_path) as img:
